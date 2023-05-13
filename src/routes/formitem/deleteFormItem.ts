@@ -1,18 +1,19 @@
 import { DeleteItemCommand, GetItemCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
 import { Next } from "koa"
 import { client } from "../../db/dynamo/client"
-import { CustomContext } from "src/util/interface/KoaRelated"
+import { CustomContext } from "../../util/interface/KoaRelated"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
+import { elasticClient } from "../../db/elastic/elasticClient"
 
 export const deleteFormItem = async (ctx: CustomContext, next: Next): Promise<void> => {
     const { formitemid } = ctx.params
-    
+
     let result
     try {
         result = await client.send(new GetItemCommand({
             TableName: "FormItem",
-            Key: marshall({ 
-                formItemId: formitemid 
+            Key: marshall({
+                formItemId: formitemid
             })
         }))
     } catch (err) {
@@ -23,7 +24,7 @@ export const deleteFormItem = async (ctx: CustomContext, next: Next): Promise<vo
             return next()
         }
     }
-    if (!result || !result.Item){
+    if (!result || !result.Item) {
         ctx.response.status = 404
         ctx.response.message = "FormItem not found"
         return next()
@@ -34,8 +35,8 @@ export const deleteFormItem = async (ctx: CustomContext, next: Next): Promise<vo
     try {
         resultForm = await client.send(new GetItemCommand({
             TableName: "Form",
-            Key: marshall({ 
-                formId 
+            Key: marshall({
+                formId
             })
         }))
     } catch (err) {
@@ -46,7 +47,7 @@ export const deleteFormItem = async (ctx: CustomContext, next: Next): Promise<vo
             return next()
         }
     }
-    if (!resultForm || !resultForm.Item){
+    if (!resultForm || !resultForm.Item) {
         ctx.response.status = 404
         ctx.response.message = "Form not found"
         return next()
@@ -74,16 +75,20 @@ export const deleteFormItem = async (ctx: CustomContext, next: Next): Promise<vo
         }
     }
 
-    if (user.userId !== author){
+    if (user.userId !== author) {
         ctx.response.status = 403
         return next()
     }
 
     try {
+        await elasticClient.delete({
+            index: "formitems",
+            id: formitemid
+        })
         await client.send(new DeleteItemCommand({
             TableName: "FormItem",
             Key: marshall({
-                formItemId: formitemid 
+                formItemId: formitemid
             }),
 
         }))
@@ -93,7 +98,7 @@ export const deleteFormItem = async (ctx: CustomContext, next: Next): Promise<vo
         ctx.response.message = "Unknown Error"
         return next()
     }
-    
+
     ctx.response.status = 204
     ctx.response.message = "Success"
     return next()

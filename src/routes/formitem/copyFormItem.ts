@@ -2,9 +2,10 @@ import { GetItemCommand, PutItemCommand, ResourceNotFoundException, UpdateItemCo
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
-import { CustomContext } from "src/util/interface/KoaRelated"
+import { CustomContext } from "../../util/interface/KoaRelated"
 import { v4 as uuidv4 } from "uuid"
 import { client } from "../../db/dynamo/client"
+import { elasticClient } from "../../db/elastic/elasticClient"
 
 const ajv = new Ajv()
 
@@ -125,6 +126,11 @@ export const copyFormItem = async (ctx: CustomContext, next: Next): Promise<void
     console.log()
 
     try {
+        await elasticClient.index({
+            index: "formitems",
+            id: newFormItem.formItemId,
+            body: newFormItem
+        })
         await client.send(new UpdateItemCommand({
             TableName: "FormItem",
             Key: marshall({

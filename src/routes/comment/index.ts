@@ -3,7 +3,7 @@ import { getComment } from "./getComment"
 import { postComment } from "./postComment"
 import { putComment } from "./putComment"
 import { deleteComment } from "./deleteComment"
-import { CustomContext, CustomState } from "src/util/interface/KoaRelated"
+import { CustomContext, CustomState } from "../../util/interface/KoaRelated"
 
 const router = new Router<CustomState, CustomContext>()
 

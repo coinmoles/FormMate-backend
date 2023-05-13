@@ -1,8 +1,9 @@
 import { DeleteItemCommand, GetItemCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import { Next } from "koa"
-import { CustomContext } from "src/util/interface/KoaRelated"
+import { CustomContext } from "../../util/interface/KoaRelated"
 import { client } from "../../db/dynamo/client"
+import { elasticClient } from "../../db/elastic/elasticClient"
 
 export const deleteForm = async (ctx: CustomContext, next: Next): Promise<void> => {
     const { formid } = ctx.params
@@ -56,6 +57,10 @@ export const deleteForm = async (ctx: CustomContext, next: Next): Promise<void> 
     }
 
     try {
+        await elasticClient.delete({
+            index: "forms",
+            id: formid
+        })
         await client.send(new DeleteItemCommand({
             TableName: "Form",
             Key: marshall({

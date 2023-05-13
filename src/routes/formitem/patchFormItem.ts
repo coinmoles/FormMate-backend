@@ -2,10 +2,11 @@ import { GetItemCommand, PutItemCommand, ResourceNotFoundException } from "@aws-
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
-import { FormItem } from "src/util/interface/FormItem"
-import { CustomContext } from "src/util/interface/KoaRelated"
+import { FormItem } from "../../util/interface/FormItem"
+import { CustomContext } from "../../util/interface/KoaRelated"
 import { v4 as uuidv4 } from "uuid"
 import { client } from "../../db/dynamo/client"
+import { elasticClient } from "../../db/elastic/elasticClient"
 
 const ajv = new Ajv()
 
@@ -62,7 +63,7 @@ export const patchFormItem = async (ctx: CustomContext, next: Next): Promise<voi
             return next()
         }
         const { formId } = ctx.request.body
-        
+
         let resultForm
         try {
             resultForm = await client.send(new GetItemCommand({
@@ -102,6 +103,11 @@ export const patchFormItem = async (ctx: CustomContext, next: Next): Promise<voi
         }
 
         try {
+            await elasticClient.index({
+                index: "formitems",
+                id: formItem.formItemId,
+                body: formItem
+            })
             await client.send(new PutItemCommand({
                 TableName: "FormItem",
                 Item: marshall(formItem)
@@ -138,6 +144,11 @@ export const patchFormItem = async (ctx: CustomContext, next: Next): Promise<voi
             }
 
             try {
+                await elasticClient.index({
+                    index: "formitems",
+                    id: formItem.formItemId,
+                    body: formItem
+                })
                 await client.send(new PutItemCommand({
                     TableName: "FormItem",
                     Item: marshall(formItem)

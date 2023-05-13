@@ -3,7 +3,7 @@ import { getUserById } from "./getUserById"
 import { getUser } from "./getUser"
 import { putUser } from "./putUser"
 import { deleteUser } from "./deleteUser"
-import { CustomContext, CustomState } from "src/util/interface/KoaRelated"
+import { CustomContext, CustomState } from "../../util/interface/KoaRelated"
 
 const router = new Router<CustomState, CustomContext>()
 

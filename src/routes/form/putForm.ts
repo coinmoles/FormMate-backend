@@ -3,7 +3,7 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
 import { client } from "../../db/dynamo/client"
-import { CustomContext } from "src/util/interface/KoaRelated"
+import { CustomContext } from "../../util/interface/KoaRelated"
 import { elasticClient } from "../../db/elastic/elasticClient"
 
 const ajv = new Ajv()

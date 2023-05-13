@@ -1,6 +1,6 @@
 import { Next } from "koa"
 import Ajv, { JSONSchemaType } from "ajv"
-import { CustomContext } from "src/util/interface/KoaRelated"
+import { CustomContext } from "../../util/interface/KoaRelated"
 
 const ajv = new Ajv()
 

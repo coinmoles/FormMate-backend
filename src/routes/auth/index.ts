@@ -1,5 +1,5 @@
 import Router from "koa-router"
-import { CustomContext, CustomState } from "src/util/interface/KoaRelated"
+import { CustomContext, CustomState } from "../../util/interface/KoaRelated"
 import { getExists } from "./getExists"
 import { login } from "./login"
 import { logout } from "./logout"

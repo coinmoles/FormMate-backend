@@ -3,7 +3,8 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
 import { client } from "../../db/dynamo/client"
-import { CustomContext } from "src/util/interface/KoaRelated"
+import { CustomContext } from "../../util/interface/KoaRelated"
+import { elasticClient } from "../../db/elastic/elasticClient"
 
 const ajv = new Ajv()
 
@@ -122,6 +123,11 @@ export const putFormItem = async (ctx: CustomContext, next: Next): Promise<void>
         updated: new Date().toISOString()
     }
     try {
+        await elasticClient.index({
+            index: "formitems",
+            id: formitemid,
+            body: newFormItem
+        })
         await client.send(new PutItemCommand({
             TableName: "Form",
             Item: marshall(newFormItem)
@@ -136,6 +142,5 @@ export const putFormItem = async (ctx: CustomContext, next: Next): Promise<void>
     ctx.response.status = 200
     ctx.response.message = "Success"
     ctx.response.body = newFormItem
-    return next()
     return next()
 }
