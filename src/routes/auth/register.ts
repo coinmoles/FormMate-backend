@@ -1,4 +1,4 @@
-import { Context, Next } from "koa"
+import { Next } from "koa"
 import Ajv, { JSONSchemaType } from "ajv"
 import { client } from "../../db/client"
 import { GetItemCommand, PutItemCommand, QueryCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
@@ -6,6 +6,7 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import { v4 as uuidv4 } from "uuid"
 import bcrypt from "bcrypt"
 import { User, UserF } from "../../util/interface/User"
+import { CustomContext } from "src/util/interface/KoaRelated"
 
 const ajv = new Ajv()
 
@@ -42,7 +43,7 @@ const schema: JSONSchemaType<Ctx> = {
 
 const validateBody = ajv.compile(schema)
 
-export const register = async (ctx: Context, next: Next): Promise<void> => {
+export const register = async (ctx: CustomContext, next: Next): Promise<void> => {
     if (!validateBody(ctx.request.body)) {
         ctx.response.status = 400
         ctx.response.message = "Invalid request body"

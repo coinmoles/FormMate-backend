@@ -1,10 +1,10 @@
-import { Context, Next } from "koa"
-import Ajv, { JSONSchemaType } from "ajv"
 import { QueryCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
-import bcrypt from "bcrypt"
-import { User } from "src/util/interface/User"
-import { client } from "../../db/client"
 import { unmarshall } from "@aws-sdk/util-dynamodb"
+import Ajv, { JSONSchemaType } from "ajv"
+import bcrypt from "bcrypt"
+import { Next } from "koa"
+import { CustomContext } from "src/util/interface/KoaRelated"
+import { client } from "../../db/client"
 import { signAccess, signRefresh } from "../../util/helper/jwt"
 
 const ajv = new Ajv()
@@ -26,7 +26,7 @@ const schema: JSONSchemaType<Ctx> = {
 
 const validateBody = ajv.compile(schema)
 
-export const login = async (ctx: Context, next: Next): Promise<void> => {
+export const login = async (ctx: CustomContext, next: Next): Promise<void> => {
     if (!validateBody(ctx.request.body)) {
         ctx.response.status = 400
         ctx.response.message = "Invalid request body"
@@ -69,7 +69,7 @@ export const login = async (ctx: Context, next: Next): Promise<void> => {
     }
 
     ctx.cookies.set("access_token", signAccess(user.userId), { httpOnly: true, maxAge: 1000 * 60 * 60 })
-    ctx.cookies.set("refresh_token", signRefresh(), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 14})
+    ctx.cookies.set("refresh_token", signRefresh(user.userId), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 14 })
 
     delete user.password
     ctx.response.status = 201

@@ -3,8 +3,9 @@ import { getComment } from "./getComment"
 import { postComment } from "./postComment"
 import { putComment } from "./putComment"
 import { deleteComment } from "./deleteComment"
+import { CustomContext, CustomState } from "src/util/interface/KoaRelated"
 
-const router = new Router()
+const router = new Router<CustomState, CustomContext>()
 
 router.get("/", getComment)
 router.post("/", postComment)
