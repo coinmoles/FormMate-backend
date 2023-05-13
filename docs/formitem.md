@@ -93,11 +93,11 @@ None
 #### body
 | Name       | Type   | Mandatory | Example    | Default                | Description    |
 | ---------- | ------ | --------- | ---------- | ---------------------- | -------------- |
-| formitemid | string | O         |            |                        | 수정할 항목 id |
-| formid     | string | X         |            | 수정 전 값 (이하 동일) | 계약서 id      |
-| article    | number | X         | 1          |                        | 항목 번호      |
-| paragraph  | number | X         | 0          |                        | 항목 번호      |
-| content    | string | X         |            |                        | 항목 내용      |
+| formitemid | string | X         |            |                        | 수정할 항목 id |
+| formid     | string | O         |            | 수정 전 값 (이하 동일) | 계약서 id      |
+| article    | number | O         | 1          |                        | 항목 번호      |
+| paragraph  | number | O         | 0          |                        | 항목 번호      |
+| content    | string | O         |            |                        | 항목 내용      |
 - or list of this object
 #### response
 ##### singular
