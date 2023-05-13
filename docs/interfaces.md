@@ -28,8 +28,9 @@ interface Form {
     userB: string | null
     count: number
     status: "private" | "public"
-    created: DateTime
-    updated: DateTime
+    created: string,
+    updated: string,
+    formItems: FormItems
 }
 ```
 
@@ -41,8 +42,9 @@ interface FormItem {
     article: number
     paragraph: number
     content: string
-    created: DateTime
-    updated: DateTime
+    created: string
+    updated: string,
+    comments: Comment[]
 }
 ```
 
@@ -53,7 +55,7 @@ interface Log {
     formId: string
     formItemId: string
     content: string
-    created: DateTime
+    created: string
 }
 ```
 

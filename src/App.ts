@@ -10,6 +10,7 @@ import { CustomContext, CustomState } from "./util/interface/KoaRelated"
 import { loginChecker } from "./util/helper/logInChecker"
 import { userRouter } from "./routes/user"
 import { formRouter } from "./routes/form"
+import { formItemRouter } from "./routes/formitem"
 
 const app = new Koa<CustomState, CustomContext>()
 const router = new Router<CustomState, CustomContext>()
@@ -24,6 +25,8 @@ router.use("/user", userRouter.routes())
 router.use("/user", userRouter.allowedMethods())
 router.use("/form", formRouter.routes())
 router.use("/form", formRouter.allowedMethods())
+router.use("/formItem", formItemRouter.routes())
+router.use("/formItem", formItemRouter.allowedMethods())
 app.use(router.routes())
 app.use(router.allowedMethods())
 

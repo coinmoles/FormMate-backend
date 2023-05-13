@@ -9,7 +9,7 @@ const input: CreateTableCommandInput = {
     AttributeDefinitions: [
         { AttributeName: "formItemId", AttributeType: "S" },
         { AttributeName: "formId", AttributeType: "S" },
-        { AttributeName: "article", AttributeType: "S" }
+        { AttributeName: "article", AttributeType: "N" },
     ],
     GlobalSecondaryIndexes: [
         {

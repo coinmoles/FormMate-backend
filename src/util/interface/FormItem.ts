@@ -4,8 +4,8 @@ export interface FormItem {
     article: number
     paragraph: number
     content: string
-    created: Date
-    updated: Date
+    created: string
+    updated: string
 }
 
 export interface FormItemF extends FormItem {

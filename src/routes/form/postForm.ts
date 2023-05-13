@@ -95,7 +95,7 @@ export const postForm = async (ctx: CustomContext, next: Next): Promise<void> =>
         return next()
     }
     
-    ctx.response.status = 200
+    ctx.response.status = 201
     ctx.response.message = "Success"
     ctx.response.body = form
     return next()
