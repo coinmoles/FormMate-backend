@@ -1,4 +1,4 @@
-interface UserF {
+export interface UserF {
     userId: string
     email: string
     name: string
@@ -13,6 +13,6 @@ interface UserF {
     sign?: string
 }
 
-interface User extends UserF {
+export interface User extends UserF {
     password: string
 }
