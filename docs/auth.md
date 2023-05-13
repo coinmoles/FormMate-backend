@@ -17,21 +17,6 @@ None
 | code | message              |
 | ---- | -------------------- |
 | 200  | Success              |
-## POST `/auth/refresh`
-- refresh token으로 access token을 받아옴
-### parameters
-None
-### query
-None
-### body
-None
-### response
-None
-- httpOnly 쿠키에 토큰 전달
-### result code
-| code | message |
-| ---- | ------- |
-| 200  | Success |
 ## POST `/auth/register`
 - 회원가입
 ### parameters
