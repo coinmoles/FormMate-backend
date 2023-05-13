@@ -5,14 +5,14 @@ import { Next } from "koa"
 import { FormItem } from "src/util/interface/FormItem"
 import { CustomContext } from "src/util/interface/KoaRelated"
 import { v4 as uuidv4 } from "uuid"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 
 const ajv = new Ajv()
 
 // TODO: get FORM and do stuff
 
 interface Ctx {
-    formItemId: string
+    formItemId?: string
     formId: string
     article: number
     paragraph: number
@@ -22,13 +22,13 @@ interface Ctx {
 const schema: JSONSchemaType<Ctx> = {
     type: "object",
     properties: {
-        formItemId: { type: "string" },
+        formItemId: { type: "string", nullable: true },
         formId: { type: "string" },
         article: { type: "number" },
         paragraph: { type: "number" },
         content: { type: "string" }
     },
-    required: ["formItemId", "formId", "article", "paragraph", "content"],
+    required: ["formId", "article", "paragraph", "content"],
     additionalProperties: false
 }
 
@@ -92,8 +92,10 @@ export const patchFormItem = async (ctx: CustomContext, next: Next): Promise<voi
             return next()
         }
 
+
         const formItem: FormItem = {
             ...ctx.request.body,
+            formItemId: ctx.request.body.formItemId ? ctx.request.body.formItemId : uuidv4(),
             useCount: 0,
             created: new Date().toLocaleDateString(),
             updated: new Date().toLocaleDateString()
@@ -129,6 +131,7 @@ export const patchFormItem = async (ctx: CustomContext, next: Next): Promise<voi
 
             const formItem: FormItem = {
                 ...formItemData,
+                formItemId: formItemData.formItemId ? formItemData.formItemId : uuidv4(),
                 useCount: 0,
                 created: new Date().toLocaleDateString(),
                 updated: new Date().toLocaleDateString()

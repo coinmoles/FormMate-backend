@@ -2,7 +2,7 @@ import { PutItemCommand } from "@aws-sdk/client-dynamodb"
 import { marshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { CustomContext } from "src/util/interface/KoaRelated"
 
 const ajv = new Ajv()

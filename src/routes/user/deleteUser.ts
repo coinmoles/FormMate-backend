@@ -1,7 +1,7 @@
 import { DeleteItemCommand } from "@aws-sdk/client-dynamodb"
 import { marshall } from "@aws-sdk/util-dynamodb"
 import { Next } from "koa"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { CustomContext } from "../../util/interface/KoaRelated"
 
 export const deleteUser = async (ctx: CustomContext, next: Next): Promise<void> => {

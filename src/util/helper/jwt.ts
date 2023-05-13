@@ -2,7 +2,7 @@ import { GetItemCommand } from "@aws-sdk/client-dynamodb"
 import { marshall } from "@aws-sdk/util-dynamodb"
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken"
 import { decode } from "punycode"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { promisify } from "util"
 import assert from "assert"
 

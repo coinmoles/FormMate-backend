@@ -1,5 +1,5 @@
 import { DynamoDBClient, CreateTableCommand, CreateTableCommandInput, DeleteTableCommand, } from "@aws-sdk/client-dynamodb"
-import { client } from "../client";
+import { client } from "./client";
 
 const input: CreateTableCommandInput = {
     TableName: "RefreshToken",

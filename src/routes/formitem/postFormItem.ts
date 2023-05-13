@@ -3,7 +3,7 @@ import Ajv, { JSONSchemaType } from "ajv"
 import { CustomContext } from "src/util/interface/KoaRelated"
 import { FormItem } from "src/util/interface/FormItem"
 import { v4 as uuidv4 } from "uuid"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { GetItemCommand, PutItemCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 

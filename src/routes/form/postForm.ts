@@ -3,9 +3,10 @@ import Ajv, { JSONSchemaType } from "ajv"
 import { CustomContext } from "src/util/interface/KoaRelated"
 import { Form } from "src/util/interface/Form"
 import { v4 as uuidv4 } from "uuid"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { PutItemCommand } from "@aws-sdk/client-dynamodb"
 import { marshall } from "@aws-sdk/util-dynamodb"
+import { elasticClient } from "../../db/elastic/elasticClient"
 
 const ajv = new Ajv()
 
@@ -79,8 +80,15 @@ export const postForm = async (ctx: CustomContext, next: Next): Promise<void> =>
         created: new Date().toISOString(),
         updated: new Date().toISOString()
     }
-    
+
+
+
     try {
+        await elasticClient.index({
+            index: "forms",
+            id: form.formId,
+            body: form
+        })
         await client.send(new PutItemCommand({
             TableName: "Form",
             Item: marshall(form)
@@ -91,7 +99,7 @@ export const postForm = async (ctx: CustomContext, next: Next): Promise<void> =>
         ctx.response.message = "Unknown Error"
         return next()
     }
-    
+
     ctx.response.status = 201
     ctx.response.message = "Success"
     ctx.response.body = form

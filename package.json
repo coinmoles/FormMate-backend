@@ -2,6 +2,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.332.0",
     "@aws-sdk/util-dynamodb": "^3.332.0",
+    "@elastic/elasticsearch": "^8.7.0",
     "@koa/cors": "^4.0.0",
     "@types/ajv": "^1.0.0",
     "@types/bcrypt": "^5.0.0",

@@ -5,7 +5,7 @@ import bcrypt from "bcrypt"
 import { Next } from "koa"
 import { CustomContext } from "src/util/interface/KoaRelated"
 import { v4 as uuidv4 } from "uuid"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 
 const ajv = new Ajv()
 

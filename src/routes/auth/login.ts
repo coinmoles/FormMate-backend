@@ -4,7 +4,7 @@ import Ajv, { JSONSchemaType } from "ajv"
 import bcrypt from "bcrypt"
 import { Next } from "koa"
 import { CustomContext } from "src/util/interface/KoaRelated"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { signAccess, signRefresh } from "../../util/helper/jwt"
 
 const ajv = new Ajv()

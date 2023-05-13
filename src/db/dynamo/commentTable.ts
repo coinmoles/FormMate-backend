@@ -1,25 +1,21 @@
 import { CreateTableCommand, CreateTableCommandInput, DeleteTableCommand } from "@aws-sdk/client-dynamodb";
-import { client } from "../client";
-
+import { client } from "./client";
 
 const input: CreateTableCommandInput = {
-    TableName: "Form",
+    TableName: "Comment",
     KeySchema: [
-        { AttributeName: "formId", KeyType: "HASH" }
+        { AttributeName: "commentId", KeyType: "HASH" }
     ],
     AttributeDefinitions: [
+        { AttributeName: "commentId", AttributeType: "S" },
         { AttributeName: "formId", AttributeType: "S" },
-        { AttributeName: "updated", AttributeType: "S" },
-        { AttributeName: "author", AttributeType: "S" },
-        { AttributeName: "category", AttributeType: "S" },
-        { AttributeName: "useCount", AttributeType: "N" }
+        { AttributeName: "formItemId", AttributeType: "S" }
     ],
     GlobalSecondaryIndexes: [
         {
-            IndexName: "authorIndex", 
+            IndexName: "formIndex", 
             KeySchema: [
-                { AttributeName: "author", KeyType: "HASH" },
-                { AttributeName: "updated", KeyType: "RANGE" }
+                { AttributeName: "formId", KeyType: "HASH" }
             ],
             Projection: {
                 ProjectionType: "ALL"
@@ -30,10 +26,9 @@ const input: CreateTableCommandInput = {
             }
         },
         {
-            IndexName: "categoryIndex", 
+            IndexName: "formItemIndex", 
             KeySchema: [
-                { AttributeName: "category", KeyType: "HASH" },
-                { AttributeName: "useCount", KeyType: "RANGE" }
+                { AttributeName: "formItemId", KeyType: "HASH" }
             ],
             Projection: {
                 ProjectionType: "ALL"
@@ -42,7 +37,7 @@ const input: CreateTableCommandInput = {
                 ReadCapacityUnits: 10,
                 WriteCapacityUnits: 100
             }
-        },
+        }
     ],
     ProvisionedThroughput: {
         ReadCapacityUnits: 10,
@@ -50,7 +45,7 @@ const input: CreateTableCommandInput = {
     }
 }
 
-const createFormTable = async () => {
+const createCommentTable = async () => {
     try {
         const results = await client.send(new CreateTableCommand(input));
         console.log(results)
@@ -59,9 +54,9 @@ const createFormTable = async () => {
     }
 }
 
-const deleteFormTable = async () => {
-    await client.send(new DeleteTableCommand({TableName: "Form"}));
+const deleteCommentTable = async () => {
+    await client.send(new DeleteTableCommand({TableName: "Comment"}));
 }
 
 
-createFormTable()
+createCommentTable()

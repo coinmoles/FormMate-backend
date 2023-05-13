@@ -2,8 +2,9 @@ import { GetItemCommand, PutItemCommand, ResourceNotFoundException } from "@aws-
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { CustomContext } from "src/util/interface/KoaRelated"
+import { elasticClient } from "../../db/elastic/elasticClient"
 
 const ajv = new Ajv()
 
@@ -32,7 +33,7 @@ const schema: JSONSchemaType<Ctx> = {
 const validateBody = ajv.compile(schema)
 
 export const putForm = async (ctx: CustomContext, next: Next): Promise<void> => {
-    const { formid } = ctx.params 
+    const { formid } = ctx.params
 
     if (!validateBody(ctx.request.body)) {
         ctx.response.status = 400
@@ -43,9 +44,9 @@ export const putForm = async (ctx: CustomContext, next: Next): Promise<void> => 
     let result
     try {
         result = await client.send(new GetItemCommand({
-            TableName: "Form",
-            Key: marshall({ 
-                formId: formid 
+            TableName: "forms",
+            Key: marshall({
+                formId: formid
             })
         }))
     } catch (err) {
@@ -56,7 +57,7 @@ export const putForm = async (ctx: CustomContext, next: Next): Promise<void> => 
             return next()
         }
     }
-    if (!result || !result.Item){
+    if (!result || !result.Item) {
         ctx.response.status = 404
         ctx.response.message = "Form not found"
         return next()
@@ -83,7 +84,7 @@ export const putForm = async (ctx: CustomContext, next: Next): Promise<void> => 
         }
     }
 
-    if (user.userId !== form.author){
+    if (user.userId !== form.author) {
         ctx.response.status = 403
         return next()
     }
@@ -106,8 +107,13 @@ export const putForm = async (ctx: CustomContext, next: Next): Promise<void> => 
         status: status ? status : form.status,
         updated: new Date().toISOString()
     }
-    
+
     try {
+        await elasticClient.index({
+            index: "Form",
+            id: formid,
+            body: newForm
+        })
         await client.send(new PutItemCommand({
             TableName: "Form",
             Item: marshall(newForm)
@@ -118,7 +124,7 @@ export const putForm = async (ctx: CustomContext, next: Next): Promise<void> => 
         ctx.response.message = "Unknown Error"
         return next()
     }
-    
+
     ctx.response.status = 200
     ctx.response.message = "Success"
     ctx.response.body = newForm

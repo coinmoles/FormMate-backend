@@ -2,7 +2,7 @@ import { DeleteItemCommand, GetItemCommand, ResourceNotFoundException } from "@a
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import { Next } from "koa"
 import { CustomContext } from "src/util/interface/KoaRelated"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 
 export const deleteForm = async (ctx: CustomContext, next: Next): Promise<void> => {
     const { formid } = ctx.params

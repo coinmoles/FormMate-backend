@@ -1,5 +1,5 @@
 import { Next } from "koa"
-import { client } from "../../db/client"
+import { client } from "../../db/dynamo/client"
 import { CustomContext } from "../../util/interface/KoaRelated"
 import { QueryCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
 

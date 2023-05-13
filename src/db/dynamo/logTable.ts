@@ -1,34 +1,22 @@
 import { CreateTableCommand, CreateTableCommandInput, DeleteTableCommand } from "@aws-sdk/client-dynamodb";
-import { client } from "../client";
+import { client } from "./client";
 
 const input: CreateTableCommandInput = {
-    TableName: "Comment",
+    TableName: "Log",
     KeySchema: [
-        { AttributeName: "commentId", KeyType: "HASH" }
+        { AttributeName: "logId", KeyType: "HASH" }
     ],
     AttributeDefinitions: [
-        { AttributeName: "commentId", AttributeType: "S" },
+        { AttributeName: "logId", AttributeType: "S" },
         { AttributeName: "formId", AttributeType: "S" },
-        { AttributeName: "formItemId", AttributeType: "S" }
+        { AttributeName: "updated", AttributeType: "S" }
     ],
     GlobalSecondaryIndexes: [
         {
             IndexName: "formIndex", 
             KeySchema: [
-                { AttributeName: "formId", KeyType: "HASH" }
-            ],
-            Projection: {
-                ProjectionType: "ALL"
-            },
-            ProvisionedThroughput: {
-                ReadCapacityUnits: 10,
-                WriteCapacityUnits: 100
-            }
-        },
-        {
-            IndexName: "formItemIndex", 
-            KeySchema: [
-                { AttributeName: "formItemId", KeyType: "HASH" }
+                { AttributeName: "formId", KeyType: "HASH" },
+                { AttributeName: "updated", KeyType: "RANGE" }
             ],
             Projection: {
                 ProjectionType: "ALL"
@@ -45,7 +33,7 @@ const input: CreateTableCommandInput = {
     }
 }
 
-const createCommentTable = async () => {
+const createLogTable = async () => {
     try {
         const results = await client.send(new CreateTableCommand(input));
         console.log(results)
@@ -54,9 +42,9 @@ const createCommentTable = async () => {
     }
 }
 
-const deleteCommentTable = async () => {
-    await client.send(new DeleteTableCommand({TableName: "Comment"}));
+const deleteLogTable = async () => {
+    await client.send(new DeleteTableCommand({TableName: "Log"}));
 }
 
 
-createCommentTable()
+createLogTable()
