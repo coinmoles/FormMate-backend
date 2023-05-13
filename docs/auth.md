@@ -10,9 +10,9 @@ None
 ### body 
 None
 ### response
-| Name | Type | Mandatory          | Example | Default | Description |
-| ---- | ---- | ----------------- | ------- | ------- | ----------- |
-| userExists | boolean | O |         |         | 유저 존재 여부             |
+| Type | Mandatory          | Example | Default | Description |
+| ---- | ----------------- | ------- | ------- | ----------- |
+| boolean | O |         |         | 유저 존재 여부             |
 ### result code
 | code | message              |
 | ---- | -------------------- |
