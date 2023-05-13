@@ -1,29 +1,4 @@
 # `/comment`
-## ~~GET `/comment/:commentid`~~
- - id로 댓글을 GET
-- 어디쓰일지는 몰?루
-### parameters
-| Name       | Type   | Mandatory | Example | Default | Description    |
-| ---------- | ------ | --------- | ------- | ------- | -------------- |
-| commentid | string | O         |         |         | 댓글 id |
-### query
-None
-### body 
-None
-### response
-| Type     | Mandatory | Example | Default | Description |
-| -------- | --------- | ------- | ------- | ----------- |
-| Comment | O         |         |         | 댓글 |
-### result code
-| code | message             |
-| ---- | ------------------- |
-| 200  | Success             |
-| 400  | No formitemid given |
-| 401  | No login data       |
-| 401  | Login expired       |
-| 403  | Forbidden        |
-| 404  | Comment not found |
-- 401/403은 private 계약서의 댓글 GET 시도시에만
 ## ~~GET `/comment?filter`~~
 - Filter로 댓글을 GET
 - 주인이 아닌 경우 public 계약서의 댓글만

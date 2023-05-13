@@ -55,7 +55,7 @@ None
 | 403  | Forbidden (No access to the form) |
 | 404  | Form not found                           |
 - 207 when multiple
-### ~~PUT `/formitem/:formitemid`~~
+### PUT `/formitem/:formitemid`
 - 계약서 항목 수정
 #### parameters
 | Name       | Type   | Mandatory | Example | Default | Description    |
@@ -83,7 +83,7 @@ None
 | 403  | Forbidden (No access to the form) |
 | 404  | Form not found                           |
 | 404  | FormItem not found                           |
-### ~~PATCH `/formitem`~~
+### PATCH `/formitem`
 - 계약서 항목 변경
 - 여러 항목 동시에 변경 가능
 #### parameters
@@ -97,7 +97,6 @@ None
 | formid     | string | X         |            | 수정 전 값 (이하 동일) | 계약서 id      |
 | article    | number | X         | 1          |                        | 항목 번호      |
 | paragraph  | number | X         | 0          |                        | 항목 번호      |
-| title      | string | X         | "근무시간" |                        | 항목 제목      |
 | content    | string | X         |            |                        | 항목 내용      |
 - or list of this object
 #### response
