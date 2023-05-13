@@ -163,4 +163,24 @@ None
 | 401  | Login expired                            |
 | 403  | Forbidden (No access to the form) |
 | 404  | FormItem not found                       |
-### POST `/formitem/search`
+## POST `/formitem/search`
+- 계약서 제목 검색
+### parameters
+None
+### query
+None
+### body
+| Name     | Type                  | Mandatory | Example                      | Default                | Description                     |
+| -------- | --------------------- | --------- | ---------------------------- | ---------------------- | ------------------------------- |
+| searchString  | string | O | "계약금" |  | 검색 단어 |
+| from | number | X | 10 | 0 | 시작점 |
+| size | number | X | 5 | 10 | 검색 개수 |
+| sort | string | X | "useCount" | null | 정렬 기준 |
+### response
+| Type | Mandatory | Example | Default | Description   |
+| ---- | -------- | ------- | ------- | ------------- |
+| FormItem[] | O        |         |         | 검색 결과 |
+### result code
+| code | message         |
+| ---- | --------------- |
+| 200  | Success         |

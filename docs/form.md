@@ -126,3 +126,23 @@ None
 | 403  | Forbidden    |
 | 404  | Form not found  |
 ## POST `/form/search`
+- 계약서 제목 검색
+### parameters
+None
+### query
+None
+### body
+| Name     | Type                  | Mandatory | Example                      | Default                | Description                     |
+| -------- | --------------------- | --------- | ---------------------------- | ---------------------- | ------------------------------- |
+| searchString  | string | O | "계약금" |  | 검색 단어 |
+| from | number | X | 10 | 0 | 시작점 |
+| size | number | X | 5 | 10 | 검색 개수 |
+| sort | string | X | "useCount" | null | 정렬 기준 |
+### response
+| Type | Mandatory | Example | Default | Description   |
+| ---- | -------- | ------- | ------- | ------------- |
+| Form[] | O        |         |         | 검색 결과 |
+### result code
+| code | message         |
+| ---- | --------------- |
+| 200  | Success         |
