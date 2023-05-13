@@ -26,14 +26,17 @@ export const loginChecker = async (ctx: CustomContext, next: Next) => {
                     ctx.request.user = { errorType: "Token Expired" }
                 else
                     ctx.request.user = { errorType: "Wrong Token" }
+                return next()
             }
             else {
                 userId = userIdRe
                 ctx.cookies.set("access_token", signAccess(userId), { httpOnly: true, maxAge: 1000 * 60 * 60 })
             }
         }
-        else
+        else {
             ctx.request.user = { errorType: "Wrong Token" }
+            return next()
+        }
     }
 
     let result
@@ -45,19 +48,15 @@ export const loginChecker = async (ctx: CustomContext, next: Next) => {
             })
         }))
     } catch (err) {
-        if (err instanceof ResourceNotFoundException) {
-            ctx.request.user = { errorType: "User Not Found" }
+        if (!(err instanceof ResourceNotFoundException)) {
+            ctx.request.user = { errorType: "Unknown Error" }
             return next()
         }
-        else
-            ctx.request.user = { errorType: "Unknown Error" }
     }
     if (!result || !result.Item) {
         ctx.request.user = { errorType: "User Not Found" }
         return next()
     }
     ctx.request.user = unmarshall(result.Item) as User
-
-    console.log(ctx.request.user)
     return next()
 }
