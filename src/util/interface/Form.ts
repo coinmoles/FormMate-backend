@@ -7,7 +7,7 @@ export interface Form {
     author: string
     userA: string | null
     userB: string | null
-    count: number
+    useCount: number
     status: "private" | "public"
     created: string
     updated: string

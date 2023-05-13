@@ -4,7 +4,7 @@ export interface FormItem {
     article: number
     paragraph: number
     content: string
-    count: number
+    useCount: number
     created: string
     updated: string
 }

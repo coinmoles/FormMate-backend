@@ -14,7 +14,6 @@ interface Ctx {
     category?: string,
     userA?: string,
     userB?: string,
-    count?: number,
     status?: "public" | "private"
 }
 
@@ -25,7 +24,6 @@ const schema: JSONSchemaType<Ctx> = {
         category: { type: "string", nullable: true },
         userA: { type: "string", nullable: true },
         userB: { type: "string", nullable: true },
-        count: { type: "number", nullable: true },
         status: { type: "string", nullable: true },
     },
     required: ["title"],
@@ -66,7 +64,6 @@ export const postForm = async (ctx: CustomContext, next: Next): Promise<void> =>
         category,
         userA,
         userB,
-        count,
         status
     } = ctx.request.body
 
@@ -77,7 +74,7 @@ export const postForm = async (ctx: CustomContext, next: Next): Promise<void> =>
         category: category ? category : "Uncategorized",
         userA: userA ? userA : null,
         userB: userB ? userB : null,
-        count: 0,
+        useCount: 0,
         status: status ? status : "public",
         created: new Date().toISOString(),
         updated: new Date().toISOString()

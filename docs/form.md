@@ -89,7 +89,7 @@ None
 | author   | userId\[]                | X         |                              |                        | 작성자 userid                   |
 | userA    | userId                | X         |                              |                        | 갑                              |
 | userB    | userId                | X         |                              |                        | 을                              |
-| count    | number                | X         | 0                            |                        | 사용횟수                        |
+
 | status   | "private" \| "public" | X         | "private"                    |                        | 주소 pure string                |
 ### response
 | Type | Mandatory | Example | Default | Description   |

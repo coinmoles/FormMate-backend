@@ -1,4 +1,4 @@
-import { GetItemCommand, PutItemCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
+import { GetItemCommand, PutItemCommand, ResourceNotFoundException, UpdateItemCommand } from "@aws-sdk/client-dynamodb"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
@@ -125,6 +125,26 @@ export const copyFormItem = async (ctx: CustomContext, next: Next): Promise<void
     console.log()
 
     try {
+        await client.send(new UpdateItemCommand({
+            TableName: "FormItem",
+            Key: marshall({
+                formItemId
+            }),
+            ExpressionAttributeValues: marshall({
+                "\:val": 1
+            }),
+            UpdateExpression: "set useCount = useCount + \:val"
+        }))
+        await client.send(new UpdateItemCommand({
+            TableName: "Form",
+            Key: marshall({
+                formId: formItem.formId
+            }),
+            ExpressionAttributeValues: marshall({
+                "\:val": 1
+            }),
+            UpdateExpression: "set useCount = useCount + \:val"
+        }))
         await client.send(new PutItemCommand({
             TableName: "FormItem",
             Item: marshall(newFormItem)

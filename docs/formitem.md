@@ -59,7 +59,6 @@ None
 | article   | number                | O         | 1          |          | 항목 번호        |
 | paragraph | number                | O         | 0          |          | 
 | content   | string                | O         |            |          | 항목 내용        |
-| count     | number                | X         | 3          | 0        | 사용 횟수        |
 - or list of this object
 ### response
 #### singular
@@ -116,7 +115,6 @@ None
 | article   | number | X         | 1          |                        | 항목 번호   |
 | paragraph | number | X         | 0          |                        | 항목 번호   |
 | content   | string | X         |            |                        | 항목 내용   |
-| count     | number | X         | 3          |                        | 사용 횟수   |
 #### response
 | Type     | Mandatory | Example | Default | Description        |
 | -------- | --------- | ------- | ------- | ------------------ |
@@ -147,7 +145,6 @@ None
 | paragraph  | number | X         | 0          |                        | 항목 번호      |
 | title      | string | X         | "근무시간" |                        | 항목 제목      |
 | content    | string | X         |            |                        | 항목 내용      |
-| count      | number | X         | 3          | 0                      | 사용 횟수      |
 - or list of this object
 #### response
 ##### singular

@@ -93,7 +93,7 @@ export const postFormItem = async (ctx: CustomContext, next: Next): Promise<void
         const formItem: FormItem = {
             formItemId: uuidv4(),
             ...ctx.request.body,
-            count: 0,
+            useCount: 0,
             created: new Date().toLocaleDateString(),
             updated: new Date().toLocaleDateString()
         }
@@ -129,7 +129,7 @@ export const postFormItem = async (ctx: CustomContext, next: Next): Promise<void
             const formItem: FormItem = {
                 formItemId: uuidv4(),
                 ...formItemData,
-                count: 0,
+                useCount: 0,
                 created: new Date().toLocaleDateString(),
                 updated: new Date().toLocaleDateString()
             }

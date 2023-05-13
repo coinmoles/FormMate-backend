@@ -12,7 +12,7 @@ const input: CreateTableCommandInput = {
         { AttributeName: "updated", AttributeType: "S" },
         { AttributeName: "author", AttributeType: "S" },
         { AttributeName: "category", AttributeType: "S" },
-        { AttributeName: "count", AttributeType: "N" }
+        { AttributeName: "useCount", AttributeType: "N" }
     ],
     GlobalSecondaryIndexes: [
         {
@@ -33,7 +33,7 @@ const input: CreateTableCommandInput = {
             IndexName: "categoryIndex", 
             KeySchema: [
                 { AttributeName: "category", KeyType: "HASH" },
-                { AttributeName: "count", KeyType: "RANGE" }
+                { AttributeName: "useCount", KeyType: "RANGE" }
             ],
             Projection: {
                 ProjectionType: "ALL"
