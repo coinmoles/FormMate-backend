@@ -101,7 +101,7 @@ export const register = async (ctx: CustomContext, next: Next): Promise<void> =>
             Item: marshall(user)
         }))
     } catch (err) {
-        console.error(err)
+        console.log(err)
         ctx.response.status = 500
         ctx.response.message = "Error connecting to DB"
         return next()

@@ -1,5 +1,5 @@
-import { QueryCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
-import { unmarshall } from "@aws-sdk/util-dynamodb"
+import { PutItemCommand, QueryCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import bcrypt from "bcrypt"
 import { Next } from "koa"
@@ -68,9 +68,23 @@ export const login = async (ctx: CustomContext, next: Next): Promise<void> => {
         return next()
     }
 
+    const refreshToken = signRefresh(user.userId)
+    try {
+        await client.send(new PutItemCommand({
+            TableName: "RefreshToken",
+            Item: marshall({
+                refreshToken
+            })
+        }))
+    } catch (err) {
+        console.log(err)
+        ctx.response.status = 500
+        ctx.response.message = "Unknown Error"
+        return next()
+    }
     ctx.cookies.set("access_token", signAccess(user.userId), { httpOnly: true, maxAge: 1000 * 60 * 60 })
-    ctx.cookies.set("refresh_token", signRefresh(user.userId), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 14 })
-
+    ctx.cookies.set("refresh_token", refreshToken, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 14 })
+    
     delete user.password
     ctx.response.status = 201
     ctx.response.body = user

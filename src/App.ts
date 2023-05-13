@@ -8,6 +8,7 @@ import Router from "koa-router"
 import { authRouter } from "./routes/auth"
 import { CustomContext, CustomState } from "./util/interface/KoaRelated"
 import { loginChecker } from "./util/helper/logInChecker"
+import { userRouter } from "./routes/user"
 
 const app = new Koa<CustomState, CustomContext>()
 const router = new Router<CustomState, CustomContext>()
@@ -18,6 +19,8 @@ app.use(loginChecker)
 
 router.use("/auth", authRouter.routes())
 router.use("/auth", authRouter.allowedMethods())
+router.use("/user", userRouter.routes())
+router.use("/user", userRouter.allowedMethods())
 app.use(router.routes())
 app.use(router.allowedMethods())
 

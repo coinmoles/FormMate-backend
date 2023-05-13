@@ -22,7 +22,7 @@ export const loginChecker = async (ctx: CustomContext, next: Next) => {
         if (userId.errorType = "TokenExpiredError") {
             const userIdRe = await verifyRefresh(refreshToken)
             if (typeof userIdRe !== "string") {
-                if (userIdRe.errorType = "TokenExpiredError")
+                if (userIdRe.errorType === "TokenExpiredError")
                     ctx.request.user = { errorType: "Token Expired" }
                 else
                     ctx.request.user = { errorType: "Wrong Token" }

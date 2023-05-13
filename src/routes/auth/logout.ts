@@ -14,7 +14,7 @@ export const logout = async (ctx: CustomContext, next: Next): Promise<void> => {
         const errorType = user.errorType
         if (errorType === "Token Expired") {
             ctx.response.status = 401
-            ctx.response.message = "Token Expired"
+            ctx.response.message = "Login Expired"
             return next()
         }
         else if (errorType === "User Not Found" || errorType === "Wrong Token") {
@@ -37,6 +37,7 @@ export const logout = async (ctx: CustomContext, next: Next): Promise<void> => {
 
         }))
     } catch (err) {
+        console.log(err)
         ctx.response.status = 500
         ctx.response.message = "Unknown Error"
         return next()

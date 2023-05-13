@@ -5,7 +5,7 @@
 ### parameters
 | Name   | Type   | Mandatory | Example | Default       | Description |
 | ------ | ------ | -------- | ------- | ------------- | ----------- |
-| userId | string | X        |         | 로그인된 유저 | 유저 id     |
+| userid | string | O        |         |  | 유저 id     |
 ### query
 None
 ### body
