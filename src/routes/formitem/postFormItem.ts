@@ -4,8 +4,8 @@ import { CustomContext } from "src/util/interface/KoaRelated"
 import { FormItem } from "src/util/interface/FormItem"
 import { v4 as uuidv4 } from "uuid"
 import { client } from "../../db/client"
-import { PutItemCommand } from "@aws-sdk/client-dynamodb"
-import { marshall } from "@aws-sdk/util-dynamodb"
+import { GetItemCommand, PutItemCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 
 const ajv = new Ajv()
 
@@ -27,7 +27,7 @@ const schema: JSONSchemaType<Ctx> = {
         content: { type: "string" }
     },
     required: ["formId", "article", "paragraph", "content"],
-    additionalProperties: true
+    additionalProperties: false
 }
 
 const validateBody = ajv.compile(schema)
@@ -52,17 +52,48 @@ export const postFormItem = async (ctx: CustomContext, next: Next): Promise<void
             return next()
         }
     }
-    
+
     if (!Array.isArray(ctx.request.body)) {
         if (!validateBody(ctx.request.body)) {
             ctx.response.status = 400
             ctx.response.message = "Invalid request body"
             return next()
         }
+        const { formId } = ctx.request.body
+
+        let resultForm
+        try {
+            resultForm = await client.send(new GetItemCommand({
+                TableName: "Form",
+                Key: marshall({
+                    formId
+                })
+            }))
+        } catch (err) {
+            if (!(err instanceof ResourceNotFoundException)) {
+                console.log(err)
+                ctx.response.status = 500
+                ctx.response.message = "Unknown Error"
+                return next()
+            }
+        }
+        if (!resultForm || !resultForm.Item) {
+            ctx.response.status = 404
+            ctx.response.message = "Form not found"
+            return next()
+        }
+        const form = unmarshall(resultForm.Item)
+
+        if (user.userId !== form.author) {
+            ctx.response.status = 403
+            ctx.response.message = "Forbidden"
+            return next()
+        }
 
         const formItem: FormItem = {
             formItemId: uuidv4(),
             ...ctx.request.body,
+            count: 0,
             created: new Date().toLocaleDateString(),
             updated: new Date().toLocaleDateString()
         }
@@ -78,7 +109,7 @@ export const postFormItem = async (ctx: CustomContext, next: Next): Promise<void
             ctx.response.message = "Unknown Error"
             return next()
         }
-        
+
         ctx.response.status = 201
         ctx.response.message = "Success"
         ctx.response.body = formItem
@@ -94,14 +125,15 @@ export const postFormItem = async (ctx: CustomContext, next: Next): Promise<void
                 })
                 continue
             }
-    
+
             const formItem: FormItem = {
                 formItemId: uuidv4(),
                 ...formItemData,
+                count: 0,
                 created: new Date().toLocaleDateString(),
                 updated: new Date().toLocaleDateString()
             }
-    
+
             try {
                 await client.send(new PutItemCommand({
                     TableName: "FormItem",
@@ -114,7 +146,7 @@ export const postFormItem = async (ctx: CustomContext, next: Next): Promise<void
                     message: "Unknown error"
                 })
             }
-            
+
             bodyList.push({
                 status: 201,
                 message: "Success",
