@@ -21,7 +21,7 @@ None
 | 400  | No formid given |
 | 401  | No login data   |
 | 401  | Login expired   |
-| 403  | Unauthorized    |
+| 403  | Forbidden    |
 | 404  | Form not found  |
 - 401/403은 private 계약서 GET 시도시에만
 ## GET `/form?filter`
@@ -59,10 +59,8 @@ None
 | -------- | --------------------- | --------- | ---------------------------- | --------------- | ------------------------------- |
 | title    | string                | O         | "어쩌고저쩌고에 대한 계약서" |                 | 계약서 제목                     |
 | category | string                | X         | "근로계약서"                 | "Uncategorized" | 계약서 종류 (근로/구매/도급 등) |
-| author   | userId\[]                | X         |                              | 로그인된 유저                | 작성자 userid                   |
 | userA    | userId                | X         |                              | null            | 갑                              |
 | userB    | userId                | X         |                              | null            | 을                              |
-| count    | number                | X         | 0                            | 0               | 사용횟수                        |
 | status   | "private" \| "public" | X         | "private"                    | "public"        | 주소 pure string                |
 ### response
 | Type | Mandatory | Example | Default | Description   |
@@ -104,7 +102,7 @@ None
 | 400  | No formid given |
 | 401  | No login data   |
 | 401  | Login expired   |
-| 403  | Unauthorized    |
+| 403  | Forbidden    |
 | 404  | Form not found  |
 ## DELETE `/form/:formid`
 - 계약서 삭제
@@ -125,6 +123,6 @@ None
 | 400  | No formid given |
 | 401  | No login data   |
 | 401  | Login expired   |
-| 403  | Unauthorized    |
+| 403  | Forbidden    |
 | 404  | Form not found  |
 ## POST `/form/search`

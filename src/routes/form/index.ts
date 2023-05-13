@@ -1,15 +1,17 @@
 import Router from "koa-router"
+import { CustomContext, CustomState } from "src/util/interface/KoaRelated"
+import { deleteForm } from "./deleteForm"
 import { getForm } from "./getForm"
 import { getFormById } from "./getFormById"
 import { postForm } from "./postForm"
-import { deleteForm } from "./deleteForm"
-import { CustomContext, CustomState } from "src/util/interface/KoaRelated"
+import { putForm } from "./putForm"
 
 const router = new Router<CustomState, CustomContext>()
 
 router.get("/:formid", getFormById)
 router.get("/", getForm)
-router.post("/:formid", postForm);
+router.post("/", postForm);
+router.put("/:formid", putForm);
 router.delete("/:formid", deleteForm);
 
 export { router as formRouter }

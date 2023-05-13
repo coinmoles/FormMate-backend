@@ -46,18 +46,6 @@ export const putUser = async (ctx: CustomContext, next: Next): Promise<void> => 
         ctx.response.message = "Invalid request body"
         return next()
     }
-    const {
-        email,
-        name,
-        password,
-        birth,
-        sex,
-        contact,
-        address,
-        job,
-        purpose,
-        belong
-    } = ctx.request.body
 
     const user = ctx.request.user
     if ("errorType" in user) {
@@ -78,6 +66,19 @@ export const putUser = async (ctx: CustomContext, next: Next): Promise<void> => 
             return next()
         }
     }
+    
+    const {
+        email,
+        name,
+        password,
+        birth,
+        sex,
+        contact,
+        address,
+        job,
+        purpose,
+        belong
+    } = ctx.request.body
 
     const newUser: any = {
         ...user,

@@ -1,8 +1,5 @@
 import { Next } from "koa"
-import { client } from "../../db/client"
 import { CustomContext } from "../../util/interface/KoaRelated"
-import { GetItemCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
-import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 
 export const getUser = async (ctx: CustomContext, next: Next): Promise<void> => {
     const user = ctx.request.user

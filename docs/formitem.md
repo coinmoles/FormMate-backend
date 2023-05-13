@@ -21,7 +21,7 @@ None
 | 400  | No formitemid given |
 | 401  | No login data       |
 | 401  | Login expired       |
-| 403  | Unauthorized        |
+| 403  | Forbidden        |
 | 404  | Form item not found |
 - 401/403은 private 계약서의 항목 GET 시도시에만
 ## ~~GET `/formitem?filter`~~
@@ -100,7 +100,7 @@ None
 | 400  | Invalid request body                     |
 | 401  | No login data                            |
 | 401  | Login expired                            |
-| 403  | Unauthorized (No access to the form) |
+| 403  | Forbidden (No access to the form) |
 | 404  | Form not found                           |
 - 207 when multiple
 ### PUT `/formitem/:formitemid`
@@ -130,7 +130,7 @@ None
 | 400  | No formitemid given                     |
 | 401  | No login data                            |
 | 401  | Login expired                            |
-| 403  | Unauthorized (No access to the form) |
+| 403  | Forbidden (No access to the form) |
 | 404  | Form not found                           |
 | 404  | FormItem not found                           |
 ### PATCH `/formitem`
@@ -190,7 +190,7 @@ None
 | 400  | Invalid request body                     |
 | 401  | No login data                            |
 | 401  | Login expired                            |
-| 403  | Unauthorized (No access to the form) |
+| 403  | Forbidden (No access to the form) |
 | 404  | Form not found                           |
 | 404  | FormItem not found                       |
 - 207 when multiple
@@ -213,6 +213,6 @@ None
 | 400  | No formitemid given                      |
 | 401  | No login data                            |
 | 401  | Login expired                            |
-| 403  | Unauthorized (No access to the form) |
+| 403  | Forbidden (No access to the form) |
 | 404  | FormItem not found                       |
 ### POST `/formitem/search`
