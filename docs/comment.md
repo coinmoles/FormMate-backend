@@ -24,7 +24,7 @@ None
 | 403  | Forbidden        |
 | 404  | Comment not found |
 - 401/403은 private 계약서의 댓글 GET 시도시에만
-## GET `/comment?filter`
+## ~~GET `/comment?filter`~~
 - Filter로 댓글을 GET
 - 주인이 아닌 경우 public 계약서의 댓글만
 ### parameters
@@ -73,7 +73,7 @@ None
 | 401  | Login expired                        |
 | 403  | Forbidden |
 | 404  | FormItem not found                   |
-## PUT `/comment/:commentid`
+## PUT ~~`/comment/:commentid`~~
 - 댓글 수정
 ### parameters
 | Name       | Type   | Mandatory | Example | Default | Description    |
@@ -99,7 +99,7 @@ None
 | 403  | Forbidden        |
 | 404  | Form not found      |
 | 404  | Comment not found   |
-## DELETE `/comment/:commentid`
+## DELETE ~~`/comment/:commentid`~~
 - 댓글 삭제
 ### parameters
 | Name      | Type   | Mandatory | Example | Default | Description    |

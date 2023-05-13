@@ -24,7 +24,7 @@ None
 | 403  | Forbidden    |
 | 404  | Form not found  |
 - 401/403은 private 계약서 GET 시도시에만
-## GET `/form?filter`
+## GET ~~`/form?filter`~~
 - Filter로 계약서 GET (자신이 작성자가가 아닌 경우 public 계약서만 확인 가능)
 ### parameters
 None
