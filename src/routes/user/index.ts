@@ -9,7 +9,7 @@ const router = new Router<CustomState, CustomContext>()
 
 router.get("/:userid", getUserById)
 router.get("/", getUser)
-router.put("/:userid", putUser)
-router.delete("/:userid", deleteUser)
+router.put("/", putUser)
+router.delete("/", deleteUser)
 
 export { router as userRouter }
