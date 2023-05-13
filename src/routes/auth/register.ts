@@ -37,7 +37,7 @@ const schema: JSONSchemaType<Ctx> = {
         belong: { type: "string", nullable: true }
     },
     required: ["email", "name", "password", "birth", "sex", "contact", "address", "job"],
-    additionalProperties: true
+    additionalProperties: false
 }
 
 const validateBody = ajv.compile(schema)
@@ -84,28 +84,20 @@ export const register = async (ctx: Context, next: Next): Promise<void> => {
         ctx.response.message = "User already exists"
         return next()
     }
-
-    const userF: UserF = {
+    
+    const passwordHashed = await bcrypt.hash(password, process.env.SALT!)
+    const user: any = {
+        ...ctx.request.body,
         userId: uuidv4(),
-        email,
-        name,
-        birth,
-        sex,
-        contact,
-        address,
-        job,
         purpose: purpose ? purpose : "Unspecified",
         belong: belong ? purpose : "Unspecified",
-        scrap: []
+        scrap: [],
+        password: passwordHashed
     };
-    const passwordHashed = await bcrypt.hash(password, process.env.SALT!)
     try {
         await client.send(new PutItemCommand({
             TableName: "User",
-            Item: marshall({
-                ...userF,
-                password: passwordHashed
-            })
+            Item: marshall(user)
         }))
     } catch (err) {
         console.error(err)
@@ -113,9 +105,11 @@ export const register = async (ctx: Context, next: Next): Promise<void> => {
         ctx.response.message = "Error connecting to DB"
         return next()
     }
+
+    delete user.password
     
     ctx.response.status = 201
     ctx.response.message = "Success"
-    ctx.response.body = userF
+    ctx.response.body = user
     return next()
 }

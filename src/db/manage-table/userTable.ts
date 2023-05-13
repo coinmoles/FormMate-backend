@@ -18,7 +18,7 @@ const input: CreateTableCommandInput = {
                 { AttributeName: "email", KeyType: "HASH" }
             ],
             Projection: {
-                ProjectionType: "KEYS_ONLY"
+                ProjectionType: "ALL"
             },
             ProvisionedThroughput: {
                 ReadCapacityUnits: 10,
@@ -44,3 +44,5 @@ const createUserTable = async () => {
 const deleteUserTable = async () => {
     await client.send(new DeleteTableCommand({ TableName: "User" }));
 }
+
+createUserTable()
