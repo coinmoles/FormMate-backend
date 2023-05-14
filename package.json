@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.332.0",
+    "@aws-sdk/client-dynamodb": "^3.165.0",
     "@aws-sdk/util-dynamodb": "^3.332.0",
     "@elastic/elasticsearch": "^8.7.0",
     "@koa/cors": "^4.0.0",

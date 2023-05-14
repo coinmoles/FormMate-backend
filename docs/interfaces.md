@@ -30,7 +30,7 @@ interface Form {
     status: "private" | "public"
     created: string,
     updated: string,
-    formItems: FormItems
+    formItems: FormItems[]
 }
 ```
 
