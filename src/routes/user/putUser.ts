@@ -1,9 +1,6 @@
-import { PutItemCommand } from "@aws-sdk/client-dynamodb"
-import { marshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
 import { Next } from "koa"
-import { client } from "../../db/dynamo/client"
-import { CustomContext } from "../../util/interface/KoaRelated"
+import { AllContext } from "../../util/interface/KoaRelated"
 
 const ajv = new Ajv()
 
@@ -40,75 +37,75 @@ const schema: JSONSchemaType<Ctx> = {
 
 const validateBody = ajv.compile(schema)
 
-export const putUser = async (ctx: CustomContext, next: Next): Promise<void> => {
-    if (!validateBody(ctx.request.body)) {
-        ctx.response.status = 400
-        ctx.response.message = "Invalid request body"
-        return next()
-    }
+export const putUser = async (ctx: AllContext, next: Next): Promise<void> => {
+    // if (!validateBody(ctx.request.body)) {
+    //     ctx.response.status = 400
+    //     ctx.response.message = "Invalid request body"
+    //     return next()
+    // }
 
-    const user = ctx.request.user
-    if ("errorType" in user) {
-        const errorType = user.errorType
-        if (errorType === "Token Expired") {
-            ctx.response.status = 401
-            ctx.response.message = "Login Expired"
-            return next()
-        }
-        else if (errorType === "User Not Found" || errorType === "Wrong Token") {
-            ctx.response.status = 401
-            ctx.response.message = "No login data"
-            return next()
-        }
-        else {
-            ctx.response.status = 500
-            ctx.response.message = "Unknown Error"
-            return next()
-        }
-    }
+    // const user = ctx.request.user
+    // if ("errorType" in user) {
+    //     const errorType = user.errorType
+    //     if (errorType === "Token Expired") {
+    //         ctx.response.status = 401
+    //         ctx.response.message = "Login Expired"
+    //         return next()
+    //     }
+    //     else if (errorType === "User Not Found" || errorType === "Wrong Token") {
+    //         ctx.response.status = 401
+    //         ctx.response.message = "No login data"
+    //         return next()
+    //     }
+    //     else {
+    //         ctx.response.status = 500
+    //         ctx.response.message = "Unknown Error"
+    //         return next()
+    //     }
+    // }
     
-    const {
-        email,
-        name,
-        password,
-        birth,
-        sex,
-        contact,
-        address,
-        job,
-        purpose,
-        belong
-    } = ctx.request.body
+    // const {
+    //     email,
+    //     name,
+    //     password,
+    //     birth,
+    //     sex,
+    //     contact,
+    //     address,
+    //     job,
+    //     purpose,
+    //     belong
+    // } = ctx.request.body
 
-    const newUser: any = {
-        ...user,
-        email: email ? email : user.email,
-        name: name ? name : user.name,
-        password: password ? password : user.password,
-        birth: birth ? birth : user.birth,
-        sex: sex ? sex : user.sex,
-        contact: contact ? contact : user.contact,
-        address: address ? address : user.address,
-        job: job ? job : user.job,
-        purpose: purpose ? purpose : user.purpose,
-        belong: belong ? belong : user.belong
-    }
+    // const newUser: any = {
+    //     ...user,
+    //     email: email ? email : user.email,
+    //     name: name ? name : user.name,
+    //     password: password ? password : user.password,
+    //     birth: birth ? birth : user.birth,
+    //     sex: sex ? sex : user.sex,
+    //     contact: contact ? contact : user.contact,
+    //     address: address ? address : user.address,
+    //     job: job ? job : user.job,
+    //     purpose: purpose ? purpose : user.purpose,
+    //     belong: belong ? belong : user.belong
+    // }
 
-    try {
-        await client.send(new PutItemCommand({
-            TableName: "User",
-            Item: marshall(newUser)
-        }))
-    } catch (err) {
-        console.log(err)
-        ctx.response.status = 500
-        ctx.response.message = "Unknown Error"
-        return next()
-    }
+    // try {
+    //     await client.send(new PutItemCommand({
+    //         TableName: "User",
+    //         Item: marshall(newUser)
+    //     }))
+    // } catch (err) {
+    //     console.log(err)
+    //     ctx.response.status = 500
+    //     ctx.response.message = "Unknown Error"
+    //     return next()
+    // }
     
-    ctx.response.status = 200
-    ctx.response.message = "Success"
-    delete newUser.password
-    ctx.response.body = newUser
-    return next()
+    // ctx.response.status = 200
+    // ctx.response.message = "Success"
+    // delete newUser.password
+    // ctx.response.body = newUser
+    // return next()
 }

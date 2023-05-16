@@ -1,13 +1,17 @@
-import { PutItemCommand, QueryCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
-import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 import Ajv, { JSONSchemaType } from "ajv"
-import bcrypt from "bcrypt"
+import ajvErrors from "ajv-errors"
 import { Next } from "koa"
-import { CustomContext } from "../../util/interface/KoaRelated"
-import { client } from "../../db/dynamo/client"
-import { signAccess, signRefresh } from "../../util/helper/jwt"
+import { RefreshToken } from "../../db/mongoose/refreshTokenModel"
+import { User } from "../../db/mongoose/userModel"
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from "../../util/constants/maxLengths"
+import { EMAIL_REGEX } from "../../util/constants/regex"
+import { signAccess, signRefresh } from "../../util/helper/signToken"
+import { setResponse } from "../../util/helper/setResponse"
+import { AllContext } from "../../util/interface/KoaRelated"
+import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from "../../util/constants/tokenMaxAge"
 
-const ajv = new Ajv()
+const ajv = new Ajv({ allErrors: true })
+ajvErrors(ajv)
 
 interface Ctx {
     email: string
@@ -17,8 +21,8 @@ interface Ctx {
 const schema: JSONSchemaType<Ctx> = {
     type: "object",
     properties: {
-        email: { type: "string" },
-        password: { type: "string" },
+        email: { type: "string", maxLength: MAX_EMAIL_LENGTH, pattern: EMAIL_REGEX.source },
+        password: { type: "string", maxLength: MAX_PASSWORD_LENGTH },
     },
     required: ["email", "password"],
     additionalProperties: false
@@ -26,68 +30,45 @@ const schema: JSONSchemaType<Ctx> = {
 
 const validateBody = ajv.compile(schema)
 
-export const login = async (ctx: CustomContext, next: Next): Promise<void> => {
+export const login = async (ctx: AllContext, next: Next): Promise<void> => {
     if (!validateBody(ctx.request.body)) {
-        ctx.response.status = 400
-        ctx.response.message = "Invalid request body"
-        return next()
+        setResponse(ctx, 400, "Invalid request body")
+        ctx.body = validateBody.errors
+        return
     }
-    const {
-        email,
-        password
-    } = ctx.request.body
-    let result;
-    try {
-        result = await client.send(new QueryCommand({
-            TableName: "User",
-            IndexName: "emailIndex",
-            KeyConditionExpression: "email = :v_email",
-            ExpressionAttributeValues: {
-                ":v_email": { "S": email }
-            },
-        }))
-    } catch (err) {
-        if (!(err instanceof ResourceNotFoundException)) {
-            console.log(err)
-            ctx.response.status = 500;
-            ctx.response.message = "Error connecting to DB"
-            return next()
-        }
-    }
-    if (!result || !result.Items || result.Count === 0) {
-        ctx.response.status = 404
-        ctx.response.message = "User not found"
-        return next()
-    }
-
-    const user = unmarshall(result.Items[0]);
-    const passwordWrong = await bcrypt.compare(password, user.password)
-    if (!passwordWrong) {
-        ctx.response.status = 401
-        ctx.response.message = "Wrong password"
-        return next()
-    }
-
-    const refreshToken = signRefresh(user.userId)
-    try {
-        await client.send(new PutItemCommand({
-            TableName: "RefreshToken",
-            Item: marshall({
-                refreshToken
-            })
-        }))
-    } catch (err) {
-        console.log(err)
-        ctx.response.status = 500
-        ctx.response.message = "Unknown Error"
-        return next()
-    }
-    ctx.cookies.set("access_token", signAccess(user.userId), { httpOnly: true, maxAge: 1000 * 60 * 60 })
-    ctx.cookies.set("refresh_token", refreshToken, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 14 })
+    const { email, password } = ctx.request.body
     
-    delete user.password
-    ctx.response.status = 201
-    ctx.response.body = user
+    let userDoc
+    try {
+        userDoc = await User.findByEmail(email)
+    } catch(err) {
+        console.error(err)
+        setResponse(ctx, 500, "Error connecting to MongoDB")
+        return
+    }
+    if (userDoc === null) {
+        setResponse(ctx, 404, "User not found")
+        return
+    }
 
+    if (!(await userDoc.validatePassword(password))) {
+        setResponse(ctx, 401, "Wrong password")
+        return
+    }
+
+    const accessToken = signAccess(userDoc._id)
+    const refreshToken = signRefresh(userDoc._id)
+    try { 
+        await RefreshToken.registerToken(refreshToken)
+    } catch (err){
+        console.error(err)
+        setResponse(ctx, 500, "Error connecting to MongoDB")
+        return
+    }
+
+    ctx.cookies.set("access_token", accessToken, { httpOnly: true, maxAge: 1000 * ACCESS_TOKEN_MAX_AGE})
+    ctx.cookies.set("refresh_token", refreshToken, { httpOnly: true, maxAge: 1000 * REFRESH_TOKEN_MAX_AGE })
+
+    setResponse(ctx, 201, "Succesfully logged in", userDoc.prettify())
     return next()
 }

@@ -1,6 +1,6 @@
 import { Next } from "koa"
 import Ajv, { JSONSchemaType } from "ajv"
-import { CustomContext } from "../../util/interface/KoaRelated"
+import { AllContext } from "../../util/interface/KoaRelated"
 
 const ajv = new Ajv()
 
@@ -19,7 +19,7 @@ const schema: JSONSchemaType<Ctx> = {
 
 const validateBody = ajv.compile(schema)
 
-export const deleteComment = async (ctx: CustomContext, next: Next): Promise<void> => {
+export const deleteComment = async (ctx: AllContext, next: Next): Promise<void> => {
     if (!validateBody(ctx.request.body)) {
         ctx.response.status = 400
     }

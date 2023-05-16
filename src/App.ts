@@ -1,5 +1,4 @@
 import dotenv from "dotenv"
-dotenv.config()
 
 import Koa, { Next } from "koa"
 import bodyParser from "koa-bodyparser"
@@ -7,14 +6,15 @@ import cors from "@koa/cors"
 import logger from "koa-logger"
 import Router from "koa-router"
 import { authRouter } from "./routes/auth"
-import { CustomContext, CustomState } from "./util/interface/KoaRelated"
-import { loginChecker } from "./util/helper/logInChecker"
+import { AllContext, CustomState } from "./util/interface/KoaRelated"
 import { userRouter } from "./routes/user"
 import { formRouter } from "./routes/form"
 import { formItemRouter } from "./routes/formitem"
+import { mongooseStart } from "./db/mongoose/mongooseStart"
+import { loginChecker } from "./middlewares/logInChecker"
 
-const app = new Koa<CustomState, CustomContext>()
-const router = new Router<CustomState, CustomContext>()
+const app = new Koa<CustomState, AllContext>()
+const router = new Router<CustomState, AllContext>()
 const PORT = 4000
 app.use(logger())
 app.use(bodyParser())
@@ -27,7 +27,7 @@ router.use("/user", userRouter.routes())
 router.use("/user", userRouter.allowedMethods())
 router.use("/form", formRouter.routes())
 router.use("/form", formRouter.allowedMethods())
-router.get("/", async (ctx: CustomContext, next: Next) => {
+router.get("/", async (ctx: AllContext, next: Next) => {
     ctx.response.status = 200
     ctx.response.body = { abcd: "efgh" },
     next()
@@ -37,6 +37,13 @@ router.use("/formItem", formItemRouter.allowedMethods())
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-app.listen(PORT, () => {
-    console.log(`This app is now listening to port ${PORT}`)
-})
+const start = async () => {
+    await dotenv.config()
+    await mongooseStart()
+    app.listen(PORT, () => {
+        console.log(`This app is now listening to port ${PORT}`)
+    })
+}
+
+
+start()

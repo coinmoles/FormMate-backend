@@ -3,7 +3,7 @@
 ## User
 ```ts
 interface User {
-    id: string
+    id: mongoose.Types.ObjectId //string
     email: string
     name: string
     birth: string
@@ -11,9 +11,10 @@ interface User {
     contact: string
     address: string
     job: string
+    scrape: formId[]
+    occupation?: string
     purpose?: string
-    scrap: formId[]
-    belong?: string
+    sign?: string
 }
 ```
 

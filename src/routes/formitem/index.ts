@@ -3,11 +3,11 @@ import { postFormItem } from "./postFormItem"
 import { putFormItem } from "./putFormItem";
 import { deleteFormItem } from "./deleteFormItem";
 import { patchFormItem } from "./patchFormItem";
-import { CustomContext, CustomState } from "../../util/interface/KoaRelated";
+import { AllContext, CustomState } from "../../util/interface/KoaRelated";
 import { copyFormItem } from "./copyFormItem";
 import { searchFormItem } from "./searchFormItem";
 
-const router = new Router<CustomState, CustomContext>()
+const router = new Router<CustomState, AllContext>()
 
 router.post("/", postFormItem);
 router.post("/copy", copyFormItem)

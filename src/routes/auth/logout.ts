@@ -1,49 +1,23 @@
+import assert from "assert"
 import { Next } from "koa"
-import { client } from "../../db/dynamo/client"
-import { CustomContext } from "../../util/interface/KoaRelated"
-import { DeleteItemCommand } from "@aws-sdk/client-dynamodb"
-import { marshall } from "@aws-sdk/util-dynamodb"
+import { RefreshToken } from "../../db/mongoose/refreshTokenModel"
+import { setResponse } from "../../util/helper/setResponse"
+import { AllContext } from "../../util/interface/KoaRelated"
 
-export const logout = async (ctx: CustomContext, next: Next): Promise<void> => {
-    const user = ctx.request.user
-    const refreshToken = ctx.cookies.get("refresh_token")    
+export const logout = async (ctx: AllContext, next: Next): Promise<void> => {
+    const refreshToken = ctx.cookies.get("refresh_token")
+    assert(refreshToken)
     ctx.cookies.set("access_token", null)
     ctx.cookies.set("refresh_token", null)
     
-    if ("errorType" in user) {
-        const errorType = user.errorType
-        if (errorType === "Token Expired") {
-            ctx.response.status = 401
-            ctx.response.message = "Login Expired"
-            return next()
-        }
-        else if (errorType === "User Not Found" || errorType === "Wrong Token") {
-            ctx.response.status = 401
-            ctx.response.message = "No login data"
-            return next()
-        }
-        else {
-            ctx.response.status = 500
-            ctx.response.message = "Unknown Error"
-            return next()
-        }
-    }
     try {
-        await client.send(new DeleteItemCommand({
-            TableName: "RefreshToken",
-            Key: marshall({
-                refreshToken 
-            }),
-
-        }))
+        RefreshToken.deleteToken(refreshToken)
     } catch (err) {
-        console.log(err)
-        ctx.response.status = 500
-        ctx.response.message = "Unknown Error"
-        return next()
+        console.error(err)
+        setResponse(ctx, 500, "Error connecting to MongoDB")
+        return
     }
 
-    ctx.response.status = 204
-    ctx.response.message = "Success"
+    setResponse(ctx, 204, "Succesfully logged out")
     return next()
 }

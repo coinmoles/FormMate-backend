@@ -1,37 +1,22 @@
 import { Next } from "koa"
-import { client } from "../../db/dynamo/client"
-import { CustomContext } from "../../util/interface/KoaRelated"
-import { QueryCommand, ResourceNotFoundException } from "@aws-sdk/client-dynamodb"
+import { User } from "../../db/mongoose/userModel"
+import { setResponse } from "../../util/helper/setResponse"
+import { AllContext } from "../../util/interface/KoaRelated"
+import assert from "assert"
 
-export const getExists = async (ctx: CustomContext, next: Next): Promise<void> => {
+export const getExists = async (ctx: AllContext, next: Next): Promise<void> => {
     const { email } = ctx.params
-    if (!email)
-        ctx.response.body = false
+    assert(typeof email === "string")
 
-    let result
-    try {
-        result = await client.send(new QueryCommand({
-            TableName: "User",
-            IndexName: "emailIndex",
-            KeyConditionExpression: "email = :v_email",
-            ExpressionAttributeValues: {
-                ":v_email": { "S": email }
-            },
-        }))
-    } catch (err) {
-        if (!(err instanceof ResourceNotFoundException)) {
-            console.log(err)
-            ctx.response.status = 500;
-            ctx.response.message = "Error connecting to DB"
-            return next()
-        }
-    }
-    if (!result || !result.Count || result.Count === 0)
-        ctx.response.body = false
-    else
-        ctx.response.body = true
+    let exist: boolean
     
-    ctx.response.status = 200
-    ctx.response.message = "Success"
+    try {
+        exist = await User.checkExist(email)
+    } catch (err) {
+        setResponse(ctx, 500, "Error connecting to MongoDB")
+        return
+    }
+    
+    setResponse(ctx, 200, "OK", exist)
     return next()
 }

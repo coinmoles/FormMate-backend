@@ -1,9 +1,19 @@
 import { Context, DefaultState, Request } from "koa";
-import { User } from "./User";
+import { UserDocument } from "./User";
 
 export interface CustomState extends DefaultState {}
-export interface CustomContext extends Context {
+export interface AllContext extends Context {
     request: Request & {
-        user: User | { errorType: "Wrong Token" | "User Not Found" | "Token Expired" | "Unknown Error"}
+        userData: UserData | NoUserData
     }
+}
+
+interface UserData {
+    user: UserDocument
+}
+
+interface NoUserData {
+    user: null
+    error: "Login expired" | "Invalid login data" | "No login data" | 
+        "Logged in as deleted user" | "Unknown error"
 }

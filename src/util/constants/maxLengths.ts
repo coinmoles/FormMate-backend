@@ -1,0 +1,11 @@
+export const MAX_EMAIL_LENGTH = 30
+export const MAX_NAME_LENGTH = 10
+export const MAX_PASSWORD_LENGTH = 256
+export const MAX_BIRTH_LENGTH = 6
+export const MAX_SEX_LENGTH = 1
+export const MAX_CONTACT_LENGTH = 20
+export const MAX_ADDRESS_LENGTH = 200
+export const MAX_JOB_LENGTH = 50
+export const MAX_PURPOSE_LENGTH = 100
+export const MAX_OCCUPATION_LENGTH = 100
+export const MAX_SIGN_LENGTH = 200

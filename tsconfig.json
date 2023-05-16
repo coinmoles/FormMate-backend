@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist",
-        "lib": ["es5", "es6"],
-        "target": "es5",
-        "module": "commonjs",
-        "sourceMap": true,
-        "strict": true,
-        "baseUrl": "./",
-        "esModuleInterop": true,
-        "experimentalDecorators": true
-    },
-    "include": ["./src/**/*"],
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+      "outDir": "./dist",
+      "lib": ["es5", "es6"],
+      "target": "es2019",
+      "module": "commonjs",
+      "sourceMap": true,
+      "strict": true,
+      "baseUrl": "./",
+      "esModuleInterop": true,
+      "experimentalDecorators": true
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }

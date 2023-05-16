@@ -1,20 +1,41 @@
 {
+  "name": "form-mate",
+  "version": "1.0.0",
+  "description": "formmate backend",
+  "main": "src/index.ts",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx ts-node src/App.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coinmoles/FormMate-backend.git"
+  },
+  "keywords": [
+    "form"
+  ],
+  "author": "coinmoles",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coinmoles/FormMate-backend/issues"
+  },
+  "homepage": "https://github.com/coinmoles/FormMate-backend#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.165.0",
-    "@aws-sdk/util-dynamodb": "^3.332.0",
     "@elastic/elasticsearch": "^8.7.0",
     "@koa/cors": "^4.0.0",
-    "@types/ajv": "^1.0.0",
     "@types/bcrypt": "^5.0.0",
-    "@types/dotenv": "^8.2.0",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/koa": "^2.13.6",
     "@types/koa__cors": "^4.0.0",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-logger": "^3.1.2",
     "@types/koa-router": "^7.4.4",
-    "@types/uuid": "^9.0.1",
     "ajv": "^8.12.0",
+    "ajv-errors": "^3.0.0",
+    "assert": "^2.0.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^9.0.0",
@@ -22,7 +43,6 @@
     "koa-bodyparser": "^4.4.0",
     "koa-logger": "^3.2.1",
     "koa-router": "^12.0.0",
-    "typescript": "^5.0.4",
-    "uuid": "^9.0.0"
+    "mongoose": "^7.1.1"
   }
 }

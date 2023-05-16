@@ -1,11 +1,7 @@
 import { Next } from "koa"
 import Ajv, { JSONSchemaType } from "ajv"
-import { CustomContext } from "../../util/interface/KoaRelated"
+import { AllContext } from "../../util/interface/KoaRelated"
 import { Form } from "../../util/interface/Form"
-import { v4 as uuidv4 } from "uuid"
-import { client } from "../../db/dynamo/client"
-import { PutItemCommand } from "@aws-sdk/client-dynamodb"
-import { marshall } from "@aws-sdk/util-dynamodb"
 import { elasticClient } from "../../db/elastic/elasticClient"
 
 const ajv = new Ajv()
@@ -33,75 +29,75 @@ const schema: JSONSchemaType<Ctx> = {
 
 const validateBody = ajv.compile(schema)
 
-export const postForm = async (ctx: CustomContext, next: Next): Promise<void> => {
-    if (!validateBody(ctx.request.body)) {
-        ctx.response.status = 400
-        ctx.response.message = "Invalid request body"
-        return next()
-    }
+export const postForm = async (ctx: AllContext, next: Next): Promise<void> => {
+//     if (!validateBody(ctx.request.body)) {
+//         ctx.response.status = 400
+//         ctx.response.message = "Invalid request body"
+//         return next()
+//     }
 
-    const user = ctx.request.user
-    if ("errorType" in user) {
-        const errorType = user.errorType
-        if (errorType === "Token Expired") {
-            ctx.response.status = 401
-            ctx.response.message = "Login Expired"
-            return next()
-        }
-        else if (errorType === "User Not Found" || errorType === "Wrong Token") {
-            ctx.response.status = 401
-            ctx.response.message = "No login data"
-            return next()
-        }
-        else {
-            ctx.response.status = 500
-            ctx.response.message = "Unknown Error"
-            return next()
-        }
-    }
+//     const user = ctx.request.user
+//     if ("errorType" in user) {
+//         const errorType = user.errorType
+//         if (errorType === "Token Expired") {
+//             ctx.response.status = 401
+//             ctx.response.message = "Login Expired"
+//             return next()
+//         }
+//         else if (errorType === "User Not Found" || errorType === "Wrong Token") {
+//             ctx.response.status = 401
+//             ctx.response.message = "No login data"
+//             return next()
+//         }
+//         else {
+//             ctx.response.status = 500
+//             ctx.response.message = "Unknown Error"
+//             return next()
+//         }
+//     }
 
-    const {
-        title,
-        category,
-        userA,
-        userB,
-        status
-    } = ctx.request.body
+//     const {
+//         title,
+//         category,
+//         userA,
+//         userB,
+//         status
+//     } = ctx.request.body
 
-    const form: Form = {
-        formId: uuidv4(),
-        author: user.userId,
-        title,
-        category: category ? category : "Uncategorized",
-        userA: userA ? userA : null,
-        userB: userB ? userB : null,
-        useCount: 0,
-        status: status ? status : "public",
-        created: new Date().toISOString(),
-        updated: new Date().toISOString()
-    }
+//     const form: Form = {
+//         formId: uuidv4(),
+//         author: user.userId,
+//         title,
+//         category: category ? category : "Uncategorized",
+//         userA: userA ? userA : null,
+//         userB: userB ? userB : null,
+//         useCount: 0,
+//         status: status ? status : "public",
+//         created: new Date().toISOString(),
+//         updated: new Date().toISOString()
+//     }
 
 
 
-    try {
-        await elasticClient.index({
-            index: "forms",
-            id: form.formId,
-            body: form
-        })
-        await client.send(new PutItemCommand({
-            TableName: "Form",
-            Item: marshall(form)
-        }))
-    } catch (err) {
-        console.log(err)
-        ctx.response.status = 500
-        ctx.response.message = "Unknown Error"
-        return next()
-    }
+//     try {
+//         await elasticClient.index({
+//             index: "forms",
+//             id: form.formId,
+//             body: form
+//         })
+//         await client.send(new PutItemCommand({
+//             TableName: "Form",
+//             Item: marshall(form)
+//         }))
+//     } catch (err) {
+//         console.log(err)
+//         ctx.response.status = 500
+//         ctx.response.message = "Unknown Error"
+//         return next()
+//     }
 
-    ctx.response.status = 201
-    ctx.response.message = "Success"
-    ctx.response.body = form
-    return next()
+//     ctx.response.status = 201
+//     ctx.response.message = "Success"
+//     ctx.response.body = form
+//     return next()
 }

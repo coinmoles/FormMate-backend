@@ -1,6 +1,4 @@
 import { Client } from "@elastic/elasticsearch";
-import { client } from "../dynamo/client";
-require("dotenv").config()
 
 
 export const elasticClient = new Client({

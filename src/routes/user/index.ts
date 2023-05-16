@@ -3,9 +3,9 @@ import { getUserById } from "./getUserById"
 import { getUser } from "./getUser"
 import { putUser } from "./putUser"
 import { deleteUser } from "./deleteUser"
-import { CustomContext, CustomState } from "../../util/interface/KoaRelated"
+import { AllContext, CustomState } from "../../util/interface/KoaRelated"
 
-const router = new Router<CustomState, CustomContext>()
+const router = new Router<CustomState, AllContext>()
 
 router.get("/:userid", getUserById)
 router.get("/", getUser)
